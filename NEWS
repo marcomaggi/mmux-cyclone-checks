@@ -3,6 +3,12 @@
 		   News file for MMUX Cyclone Checks
 		   =================================
 
+Revision 0.1.0-devel.1
+----------------------
+
+* Fixed non-Info documentation generation.
+
+
 Revision 0.1.0-devel.0
 ----------------------
 
