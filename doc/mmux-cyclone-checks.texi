@@ -1,0 +1,534 @@
+\input texinfo.tex
+@c %**start of header
+@setfilename mmux-cyclone-checks.info
+@settitle @sc{mmux} Cyclone Checks
+@c %**end of header
+
+@include version.texi
+@include macros.texi
+
+@c page
+@c ------------------------------------------------------------
+@c Values.
+@c ------------------------------------------------------------
+
+@set TITLE                      Checks for Cyclone
+
+@c To be used as @value{PACKAGE} whenever we need to include the full name of this package.
+@set PACKAGE                    @sc{mmux} Cyclone Checks
+
+@c To be used as @value{PACKAGE} whenever we need to include the nickname of the project: the name
+@c that is used to compose the distribution tarball or the web address.
+@set PACKAGE_NICKNAME           mmux-cyclone-checks
+
+@c To be used as @value{AUTHOR} whenever we need to include the list of authors of this document.
+@set AUTHOR                     Marco Maggi
+
+@c To be used as @value{AUTHOR_EMAIL} whenever we need to include the email of the *single* author
+@c of this document.
+@set AUTHOR_EMAIL               @email{mrc.mgg@@gmail.com}
+
+@c To be used as @value{COPYRIGHT_YEARS} whenever we need to include the list of copyright years.
+@set COPYRIGHT_YEARS            2020
+
+@set CYCLONE_VERSION            0.17
+
+@c ------------------------------------------------------------
+
+@set PackageStem                checks
+
+@set PackageAutoconfPrefix      MMUX_CYCLONE_CHECKS
+@set PackagePkgconfigModule     mmux-cyclone-checks
+
+@set GithubUrl                  @url{https://github.com/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set BitbucketUrl               @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}}
+@set DownloadUrl                @url{https://bitbucket.org/marcomaggi/@value{PACKAGE_NICKNAME}/downloads}
+@set DocumentationUrl           @url{https://marcomaggi.github.io/docs/@value{PACKAGE_NICKNAME}.html}
+
+@c page
+@c ------------------------------------------------------------
+@c Local macros.
+@c ------------------------------------------------------------
+
+@macro mmux{}
+@sc{mmux}
+@end macro
+
+@c page
+@c ------------------------------------------------------------
+@c Copyright notice.
+@c ------------------------------------------------------------
+
+@copying
+This document describes version @value{VERSION} of @value{PACKAGE}, a distribution of libraries for
+Cyclone Scheme, a Scheme--to--C compiler supporting the language features as defined in the
+``Revised^7 Report on Scheme''; the library implements features to organise test suites and it is
+derived from @ansrfi{78} ``Lightweight testing''.
+
+The package supports @posix{} platforms.  This package should work with Cyclone version
+@value{CYCLONE_VERSION}.
+
+The latest release can be downloaded from:
+
+@center @value{DownloadUrl}
+
+@noindent
+development takes place at:
+
+@center @value{GithubUrl}
+
+@noindent
+and as backup at:
+
+@center @value{BitbucketUrl}
+
+@noindent
+Copyright @copyright{} 2009-2016, 2020 Marco Maggi @value{AUTHOR_EMAIL}@*
+Copyright @copyright{} 2005-2006 Sebastian Egner @email{Sebastian.Egner@@philips.com}@*
+Modified by Derick Eddington for @rnrs{6} Scheme.@*
+Modified by Marco Maggi for Cyclone Scheme.
+
+@quotation
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the ``Software''), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED ``AS IS'', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+@end quotation
+@end copying
+
+@c page
+@c ------------------------------------------------------------
+@c Headers.
+@c ------------------------------------------------------------
+
+@titlepage
+@title @value{TITLE}
+@subtitle Revision @value{VERSION}
+@author @value{AUTHOR} @value{AUTHOR_EMAIL}
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@c ------------------------------------------------------------
+
+@ifinfo
+@dircategory Development
+@direntry
+* mmux-cyclone-checks: (mmux-cyclone-checks).  A port of @ansrfi{78} ``Lightweight testing'' to Cyclone Scheme.
+@end direntry
+@end ifinfo
+
+@c ------------------------------------------------------------
+
+@ignore
+@syncodeindex tp cp
+@syncodeindex vr cp
+@syncodeindex fn cp
+@end ignore
+
+@c page
+@ifnottex
+@node Top
+@top @value{TITLE}
+
+@insertcopying
+
+@menu
+* overview::                    Overview of the package.
+* version::                     Version functions.
+* eval::                        Evaluating code.
+* select::                      Selecting tests to be run.
+* result::                      Handling multiple results.
+* output::                      Special output functions.
+
+Appendices
+
+* references::                  Bibliography and references.
+
+Indexes
+
+* concept index::               An entry for each concept.
+* function index::              An entry for each function.
+* variable index::              An entry for each variable.
+* type index::                  An entry for each type.
+@end menu
+@end ifnottex
+
+@c page
+@node overview
+@chapter Overview of the package
+
+
+@cindex @library{mmux.cyclone.checks}, library
+@cindex Library @library{mmux.cyclone.checks}
+
+
+This document describes version @value{VERSION} of @value{PACKAGE}, a distribution of libraries for
+Cyclone Scheme, a Scheme--to--C compiler supporting the language features as defined in the
+``Revised^7 Report on Scheme''; the library implements features to organise test suites and it is
+derived from @ansrfi{78} ``Lightweight testing''.
+
+The package supports @posix{} platforms.  This package should work with Cyclone version
+@value{CYCLONE_VERSION}.
+
+The package installs the library @library{mmux.cyclone.checks} along with its import libraries; to
+require the library and import its syntactic bindings in a module we can do:
+
+@example
+(import (mmux.cyclone.checks))
+@end example
+
+@c page
+@node version
+@chapter Version functions
+
+
+@value{PACKAGE}'s version number follows the specification of @dfn{Semantic Versioning} version 2.0
+as outlined at:
+
+@center @url{https://semver.org/}
+
+@noindent
+the following functions are available to inspect the version specification at runtime.
+
+
+@defun mmux-checks-@value{PackageStem}-package-major-version
+Return a fixnum representing the package's major version number.  As example, if the full semantic
+version is @samp{1.2.3-devel.0+x86-64}: the major version number is the fixnum @samp{1}.
+@end defun
+
+
+@defun mmux-checks-@value{PackageStem}-package-minor-version
+Return a fixnum representing the package's minor version number.  As example, if the full semantic
+version is @samp{1.2.3-devel.0+x86-64}: the minor version number is the fixnum @samp{2}.
+@end defun
+
+
+@defun mmux-checks-@value{PackageStem}-package-patch-level
+Return a fixnum representing the package's patch level number.  As example, if the full semantic
+version is @samp{1.2.3-devel.0+x86-64}: the patch level number is the fixnum @samp{3}.
+@end defun
+
+
+@defun mmux-checks-@value{PackageStem}-package-prerelease-tag
+Return a string representing the package's prerelease tag.  As example, if the full semantic version
+is @samp{1.2.3-devel.0+x86-64}: the prerelease tag is the string @samp{"devel.0"}.  This string may
+be empty.
+@end defun
+
+
+@defun mmux-checks-@value{PackageStem}-package-build-metadata
+Return a string representing the package's build metadata.  As example, if the full semantic version
+is @samp{1.2.3-devel.0+x86-64}: the build metadata is the string @samp{"x86-64"}.  This string may
+be empty.  We need to remember that this specification segment must contain only @ascii{}
+alphanumerics and hyphen @samp{[0-9A-Za-z-]}; underscores are @strong{not} allowed.
+@end defun
+
+
+@defun mmux-checks-@value{PackageStem}-package-version
+Return a string representing the package's version.  As example, if the full semantic version is
+@samp{1.2.3-devel.0+x86-64}: the package version is the string @samp{"1.2.3-devel.0"}, without the
+build metadata.
+@end defun
+
+
+@defun mmux-checks-@value{PackageStem}-package-semantic-version
+Return a string representing the package's semantic version.  As example, if the full semantic
+version is @samp{1.2.3-devel.0+x86-64}: the package version is the string
+@samp{"v1.2.3-devel.0+x86-64"}, notice the leading character @samp{v}.
+@end defun
+
+@c page
+@node eval
+@chapter Evaluating code
+
+
+@deffn Syntax check @var{expr} (=> @var{equal}) @var{expected}
+@deffnx Syntax check @var{expr} => @var{expected}
+@deffnx Syntax check @var{name} @var{expr} (=> @var{equal}) @var{expected}
+@deffnx Syntax check @var{name} @var{expr} => @var{expected}
+Evaluate @var{expr} and compare its return value to the return value of
+@var{expected} using the predicate @var{equal}, which is @func{equal?}
+when omitted.  Then a report is printed according to the current mode
+setting (see below) and the outcome is recorded in a global state to be
+used in @func{check-report}.
+
+The precise order of evaluation is that first @var{equal} and
+@var{expected} are evaluated (in unspecified order) and then @var{expr}
+is evaluated.  Example: @code{(check (+ 1 1) => 2)}.
+
+When @var{name} is given: it is the name of this test, @ref{select, Selecting tests to be run}.
+@end deffn
+
+
+@defun check-report
+Print a summary and the first failed check, if there is any, depending
+on the current mode settings.  Call @func{exit} to exit the current
+process with code:
+
+@table @code
+@item 0
+If all the tests were run successfully.
+
+@item 1
+If at least one test failed.
+@end table
+@end defun
+
+
+@defun check-set-mode! @var{mode}
+Set the current mode to @var{mode}, which must be a symbol among:
+@code{off}, @code{summary}, @code{report-failed}, @code{report}; the
+default is @code{report}.  Note that you can change the mode at any
+time, and that @func{check} and @func{check-report} use the current
+value.
+
+The mode symbols have the following meaning:
+
+@table @code
+@item off
+do not execute any of the checks;
+
+@item summary
+print only summary in @func{check-report} and nothing else;
+
+@item report-failed
+report failed checks when they happen, and in summary;
+
+@item report
+report every example executed.
+@end table
+@end defun
+
+
+@defun check-reset!
+Reset the global state (counters of correct/failed examples) to the
+state immediately after loading the module for the first time, i.e. no
+checks have been executed.
+@end defun
+
+
+@defun check-passed? @var{expected-total-count}
+Return @true{} if there were no failed checks and
+@var{expected-total-count} correct checks, @false{} otherwise.
+
+Rationale: This procedure can be used in automatized tests by
+terminating a test program with the statement:
+
+@example
+(exit (if (check-passed? n) 0 1))
+@end example
+@end defun
+
+
+@deffn Syntax false-if-exception @var{form0} @var{form} ...
+Evaluate all the @var{form}s as in @func{begin}.  If an exception is raised: return @false{};
+otherwise return the return value of the last @var{form}.
+@end deffn
+
+
+@deffn Syntax check-for-true @var{expr}
+@deffnx Syntax check-for-true @var{name} @var{expr}
+@deffnx Syntax check-for-false @var{expr}
+@deffnx Syntax check-for-false @var{name} @var{expr}
+Evaluate @var{expr} in a @func{check} form, expecting a non--false or
+@false{} value as result.
+
+When @var{name} is given: it is the name of this test, @ref{select, Selecting tests to be run}.
+@end deffn
+
+@c page
+@node select
+@chapter Selecting tests to be run
+
+
+As usage example, let's assume that the system environment variable @env{CHECKS_NAME} is set to
+@code{yellow}:
+
+@example
+(parameterize ((check-test-name 'yellow))
+
+  ;; this is evaluated
+  (check
+      (do-something)
+    => 123)
+
+  ;; this is evaluated, too
+  (check
+      (do-some-other-thing)
+    => 456)
+
+  #| end of PARAMETERIZE |#)
+
+(parameterize ((check-test-name 'blue))
+
+  ;; this is NOT evaluated
+  (check
+      (do-something)
+    => #t)
+
+  ;; this is NOT evaluated
+  (check
+      (do-some-other-thing)
+    => #f)
+
+  #| end of PARAMETERIZE |#)
+
+;; this is evaluated
+(check "yellow-one"
+    (do-something)
+  => 123)
+
+;; this is NOT evaluated
+(check 'red
+    (do-something)
+  => #t)
+@end example
+
+
+@defvr {Environment Variable} CHECKS_NAME
+The system environment variable used to select tests in a test suite file.  The value of the
+variable must be the name, or the prefix of the name, or the suffix of the name, of one or more
+tests.
+@end defvr
+
+
+@deffn Parameter check-test-name
+Holds the name of the current test or tests.  Must be set to @false{}, a string or a symbol.
+@end deffn
+
+@c page
+@node result
+@chapter Handling multiple results
+
+
+@deffn Syntax with-result @var{form0} @var{form} @dots{}
+Evaluate all the @var{form}s, as in:
+
+@example
+(let () @var{form0} @var{form} @dots{})
+@end example
+
+@noindent
+in a dynamic environment in which an implicit result variable is defined.  The implicit variable is
+handled as a list.
+
+Return a list whose first value is the return value of the last @var{form} and whose second value is
+the value of the implicit variable.
+@end deffn
+
+
+@defun add-result @var{obj}
+Append @var{obj} to the list in the implicit variable defined by @func{with-result}, return
+@var{obj} itself.
+@end defun
+
+
+@defun get-result
+Return the current value of the implicit variable defined by @func{with-result}.
+@end defun
+
+@c page
+@node output
+@chapter Special output functions
+
+
+@defvr Constant check-quiet-tests?
+@cindex @env{CHECKS_QUIET}
+Set to a boolean value.  It is initialised from the system environment variable @env{CHECKS_QUIET}:
+when the variable is set to @samp{yes} or a non--zero fixnum, the boolean is @true{}; otherwise it
+is @false{}.
+@end defvr
+
+
+@defun check-display @var{obj}
+Display @var{obj} to the current error port if @code{check-quiet-tests?}
+is set to @true{}.
+@end defun
+
+
+@defun check-write @var{obj}
+Write @var{obj} to the current error port if @code{check-quiet-tests?}
+is set to @true{}.
+@end defun
+
+
+@defun check-newline
+Display a newline character to the current error port if
+@code{check-quiet-tests?}  is set to @true{}.
+@end defun
+
+
+@defun check-pretty-print @var{obj}
+Pretty prints @var{obj} to the current error port if
+@code{check-quiet-tests?}  is set to @true{}.
+@end defun
+
+@c page
+@node references
+@appendix Bibliography and references
+
+
+The documentation of @value{PACKAGE} is available online:
+
+@center @value{DocumentationUrl}
+
+@noindent
+the latest release of this package can be downloaded from:
+
+@center @value{DownloadUrl}
+
+@noindent
+development takes place at:
+
+@center @value{GithubUrl}
+
+@noindent
+and as backup at:
+
+@center @value{BitbucketUrl}
+
+@noindent
+Cyclone can be downloaded from:
+
+@center @url{https://github.com/justinethier/cyclone}
+
+@c page
+@node concept index
+@appendix An entry for each concept
+
+@printindex cp
+
+@node function index
+@appendix An entry for each function
+
+@printindex fn
+
+@node variable index
+@appendix An entry for each variable
+
+@printindex vr
+
+@node type index
+@appendix An entry for each type
+
+@printindex tp
+
+@contents
+@bye
+
+@c end of file
+@c Local Variables:
+@c ispell-local-dictionary: "en_GB-ise-w_accents"
+@c end:
