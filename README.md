@@ -9,8 +9,7 @@ suites and it is derived from SRFI 78 "Lightweight testing".
 
 The package targets POSIX systems.
 
-The package uses the GNU Autotools and it is tested, using Travis CI, on
-both Ubuntu GNU+Linux systems and OS X systems.
+The package uses the GNU Autotools.
 
 This package  should work  with Cyclone  version 0.17.
 
